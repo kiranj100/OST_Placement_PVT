@@ -16,14 +16,13 @@ def upload_file(request):
                 uploaded_file.save()
                 return redirect('convert_to_excel')
             else:
-                return render(request, template_name="error.html")
+                return render(request, "error.html")
     else:
         form = UploadFileForm()
-    return render(request, 'upload.html', context= {'form': form})
+    return render(request, 'upload.html', context={'form': form})
 
 
 def extract_candidate_info(text):
-
     name_regex = r'([A-Z][a-z]+(?: [A-Z][a-z]+)*)'
     email_regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
     phone_regex = r'\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b'
@@ -50,7 +49,6 @@ def convert_to_excel(request):
 
             candidate_info = zip(names, emails, phone_numbers)
             all_candidate_info.extend(candidate_info)
-
 
     workbook = xlwt.Workbook()
     worksheet = workbook.add_sheet('Sheet 1')
