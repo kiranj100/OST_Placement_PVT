@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="static/style.css" >
+    <title>Upload PDF</title>
+</head>
+<body>
+    <div class="container">
+    <div class="title">Upload PDF Files</div>
+    <form class="form_file" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="jinja_code">
+        {{ form.as_p }}
+        </div>
+        <button class="btn" type="submit">Upload</button>
+    </form>
+    </div>
+</body>
+</html>

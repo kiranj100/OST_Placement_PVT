@@ -1,0 +1,45 @@
+
+body{
+
+     background-color: #842545;
+     font-family: 'Montserrat', sans-serif;
+
+}
+.container {
+    display: flex;
+    flex-direction: column;
+     align-items: center;
+     justify-content: center;
+    text-align: center;
+    margin-top: 15%;
+
+}
+.title{
+
+    font-weight: bold;
+    font-size: 2.8rem;
+     color:white;
+}
+.jinja_code{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.form_file{
+    font-weight: bold;
+    font-size: 1.5rem;
+     color:white;
+
+}
+.btn{
+    font-family: 'Montserrat', sans-serif;
+    width: 10rem;
+    font-weight: bold;
+    padding: 10px;
+    font-size: 1.3rem;
+    border: none;
+    border-radius: 12px;
+    background-color: goldenrod;
+    color: #ffffff;
+    cursor: pointer;
+}
+

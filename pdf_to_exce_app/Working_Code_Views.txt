@@ -1,0 +1,65 @@
+import re
+import pdfplumber
+import xlwt
+import pandas as pd
+
+from django.shortcuts import render, redirect
+from .forms import UploadFileForm
+from .models import UploadedFile
+from django.http import HttpResponse
+
+
+def upload_file(request):
+    if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('convert_to_excel')
+    else:
+        form = UploadFileForm()
+    return render(request, 'upload.html', {'form': form})
+
+
+def extract_information_from_cv(text):
+    # Regular expressions to match email addresses and phone numbers
+    email_regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+    phone_regex = r'\b\d{3}[-.\s]?\d{3}[-.\s]?\d{4}\b'
+
+    # Find all email addresses on the page
+    emails = re.findall(email_regex, text)
+    # Find all phone numbers on the page
+    phone_numbers = re.findall(phone_regex, text)
+
+    return emails, phone_numbers
+
+
+def convert_to_excel(request):
+    uploaded_file = UploadedFile.objects.last()
+    pdf_path = uploaded_file.pdf_file.path
+    excel_path = pdf_path.replace('.pdf', '_extracted.xls')
+
+    all_data = []
+
+    with pdfplumber.open(pdf_path) as pdf:
+        for page in pdf.pages:
+            text = page.extract_text()
+            emails, phone_numbers = extract_information_from_cv(text)
+
+            # Extract other details here, e.g., name, address, etc.
+            # Add them to a dictionary
+            candidate_data = {
+                'Emails': emails,
+                'Phone Numbers': phone_numbers,
+                # Add more fields as needed
+            }
+            all_data.append(candidate_data)
+
+    # Convert extracted data to DataFrame
+    df = pd.DataFrame(all_data)
+
+    # Write DataFrame to Excel
+    df.to_excel(excel_path, index=False)
+
+    response = HttpResponse(open(excel_path, 'rb'), content_type='application/ms-excel')
+    response['Content-Disposition'] = f'attachment; filename="{uploaded_file.pdf_file.name.replace(".pdf", "_extracted.xls")}"'
+    return response
