@@ -19,7 +19,7 @@ def upload_file(request):
                 return render(request, template_name="error.html")
     else:
         form = UploadFileForm()
-    return render(request, 'upload.html', {'form': form})
+    return render(request, 'upload.html', context= {'form': form})
 
 
 def extract_candidate_info(text):
